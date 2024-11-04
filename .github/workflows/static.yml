@@ -50,3 +50,13 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+      - name: Send WeChat Notification
+        if: success() # 仅在部署成功时发送通知
+        run: |
+          curl -X POST -H 'Content-Type: application/json' \
+          -d '{
+            "msgtype": "text",
+            "text": {
+              "content": "部署成功！你的应用已成功发布到 GitHub Pages"
+            }
+          }' ${{ secrets.WECHAT_WEBHOOK_URL }}
